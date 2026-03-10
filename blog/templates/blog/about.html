@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}About — Blog IM{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="section-header">
+        <h1 class="section-title">About</h1>
+        <p class="section-subtitle">Blog haqida</p>
+    </div>
+
+    <div class="about-card">
+        <div class="about-avatar">
+            <i class="ri-user-smile-line"></i>
+        </div>
+        <div class="about-content">
+            {% if about_text %}
+            <div class="about-text ck-content">{{ about_text|safe }}</div>
+            {% else %}
+            <p class="about-text">
+                Blog IM — zamonaviy, minimal va professional blog sayti. Bu yerda turli mavzularda qiziqarli
+                maqolalar, texnologiya yangiliklari va shaxsiy tajribalarim bilan o'rtoqlashtiraman.
+            </p>
+            <p class="about-text">
+                Blog Django va Django REST Framework asosida qurilgan bo'lib, CKEditor yordamida boy
+                matn formatlash imkoniyatini taqdim etadi.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

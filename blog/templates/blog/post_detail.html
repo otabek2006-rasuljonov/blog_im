@@ -1,0 +1,37 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }} — Blog IM{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="post-detail">
+        <a href="{% url 'post_list' %}" class="back-btn">
+            <i class="ri-arrow-left-line"></i> Ortga
+        </a>
+
+        <header class="post-detail-header">
+            <h1 class="post-detail-title">{{ post.title }}</h1>
+            <div class="post-detail-meta">
+                <span>
+                    <i class="ri-user-3-line"></i>
+                    {{ post.author.get_full_name|default:post.author.username }}
+                </span>
+                <span>
+                    <i class="ri-calendar-line"></i>
+                    {{ post.created_at|date:"d M Y, H:i" }}
+                </span>
+                {% if post.updated_at != post.created_at %}
+                <span>
+                    <i class="ri-refresh-line"></i>
+                    Yangilangan: {{ post.updated_at|date:"d M Y" }}
+                </span>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="post-detail-content ck-content">
+            {{ post.content|safe }}
+        </div>
+    </div>
+</section>
+{% endblock %}
