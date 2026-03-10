@@ -1,0 +1,74 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Connection — Blog IM{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="section-header">
+        <h1 class="section-title">Connection</h1>
+        <p class="section-subtitle">Bog'lanish ma'lumotlari</p>
+    </div>
+
+    <div class="connection-grid">
+        {% if settings.github_url %}
+        <a href="{{ settings.github_url }}" target="_blank" rel="noopener noreferrer" class="connection-card">
+            <div class="connection-icon github">
+                <i class="ri-github-fill"></i>
+            </div>
+            <div class="connection-info">
+                <span class="connection-label">GitHub</span>
+                <span class="connection-value">{{ settings.github_url }}</span>
+            </div>
+            <i class="ri-external-link-line connection-arrow"></i>
+        </a>
+        {% endif %}
+
+        {% if settings.telegram_url %}
+        <a href="{{ settings.telegram_url }}" target="_blank" rel="noopener noreferrer" class="connection-card">
+            <div class="connection-icon telegram">
+                <i class="ri-telegram-fill"></i>
+            </div>
+            <div class="connection-info">
+                <span class="connection-label">Telegram</span>
+                <span class="connection-value">{{ settings.telegram_url }}</span>
+            </div>
+            <i class="ri-external-link-line connection-arrow"></i>
+        </a>
+        {% endif %}
+
+        {% if settings.phone %}
+        <a href="tel:{{ settings.phone }}" class="connection-card">
+            <div class="connection-icon phone">
+                <i class="ri-phone-fill"></i>
+            </div>
+            <div class="connection-info">
+                <span class="connection-label">Telefon</span>
+                <span class="connection-value">{{ settings.phone }}</span>
+            </div>
+            <i class="ri-arrow-right-line connection-arrow"></i>
+        </a>
+        {% endif %}
+
+        {% if settings.email %}
+        <a href="mailto:{{ settings.email }}" class="connection-card">
+            <div class="connection-icon email">
+                <i class="ri-mail-fill"></i>
+            </div>
+            <div class="connection-info">
+                <span class="connection-label">Email</span>
+                <span class="connection-value">{{ settings.email }}</span>
+            </div>
+            <i class="ri-arrow-right-line connection-arrow"></i>
+        </a>
+        {% endif %}
+
+        {% if not settings.github_url and not settings.telegram_url and not settings.phone and not settings.email %}
+        <div class="empty-state">
+            <i class="ri-contacts-line"></i>
+            <p>Bog'lanish ma'lumotlari hali kiritilmagan.</p>
+            <p><small>Admin paneldan SiteSettings ni to'ldiring.</small></p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

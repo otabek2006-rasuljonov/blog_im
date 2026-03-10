@@ -1,0 +1,102 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Posts — Blog IM{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="section-header">
+        <h1 class="section-title">Posts</h1>
+        <p class="section-subtitle">Barcha maqolalar</p>
+    </div>
+
+    <form class="search-form" method="get" action="{% url 'post_list' %}">
+        <div class="search-wrapper">
+            <i class="ri-search-line search-icon"></i>
+            <input
+                type="text"
+                name="q"
+                class="search-input"
+                placeholder="Postlarda qidirish..."
+                value="{{ query }}"
+                autocomplete="off"
+            >
+            {% if query %}
+            <a href="{% url 'post_list' %}" class="search-clear" title="Tozalash">
+                <i class="ri-close-line"></i>
+            </a>
+            {% endif %}
+            <button type="submit" class="search-btn">Qidirish</button>
+        </div>
+        {% if query %}
+        <p class="search-result-info">
+            "<strong>{{ query }}</strong>" bo'yicha {{ page_obj.paginator.count }} ta natija topildi
+        </p>
+        {% endif %}
+    </form>
+
+    {% if page_obj.object_list %}
+    <div class="posts-grid">
+        {% for post in page_obj %}
+        <article class="post-card">
+            <div class="post-card-body">
+                <div class="post-meta">
+                    <span class="post-author">
+                        <i class="ri-user-3-line"></i> {{ post.author.get_full_name|default:post.author.username }}
+                    </span>
+                    <span class="post-date">
+                        <i class="ri-calendar-line"></i> {{ post.created_at|date:"d M Y" }}
+                    </span>
+                </div>
+                <h2 class="post-title">
+                    <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
+                </h2>
+                <p class="post-excerpt">{{ post.content|striptags|truncatechars:150 }}</p>
+            </div>
+            <div class="post-card-footer">
+                <a href="{% url 'post_detail' post.pk %}" class="read-more-btn">
+                    O'qish <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <nav class="pagination" aria-label="Pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="page-btn">
+            <i class="ri-arrow-left-s-line"></i>
+        </a>
+        {% else %}
+        <span class="page-btn disabled"><i class="ri-arrow-left-s-line"></i></span>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <span class="page-btn active">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}" class="page-btn">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="page-btn">
+            <i class="ri-arrow-right-s-line"></i>
+        </a>
+        {% else %}
+        <span class="page-btn disabled"><i class="ri-arrow-right-s-line"></i></span>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state">
+        <i class="ri-file-text-line"></i>
+        <p>{% if query %}Hech qanday natija topilmadi.{% else %}Hali postlar yo'q.{% endif %}</p>
+        {% if query %}
+        <a href="{% url 'post_list' %}" class="btn-outline">Barcha postlarni ko'rish</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
