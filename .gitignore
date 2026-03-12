@@ -1,0 +1,14 @@
+# Build artifacts
+ipinip-filter/build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
