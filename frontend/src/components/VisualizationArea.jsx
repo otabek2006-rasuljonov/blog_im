@@ -5,12 +5,13 @@ import PendulumSimulation from '../simulations/physics/PendulumSimulation';
 import ProjectileSimulation from '../simulations/physics/ProjectileSimulation';
 import FunctionGraphing from '../simulations/mathematics/FunctionGraphing';
 import GeometryShapes from '../simulations/mathematics/GeometryShapes';
+import MolecularViewer from '../simulations/chemistry/MolecularViewer';
 
 export default function VisualizationArea() {
   const containerRef = useRef(null);
   const simulationRef = useRef(null);
   
-  const { currentLab, currentExperiment, physicsParams, mathParams, isRunning } = useLabStore();
+  const { currentLab, currentExperiment, physicsParams, mathParams, chemistryParams, isRunning } = useLabStore();
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -50,6 +51,13 @@ export default function VisualizationArea() {
           mathParams.geometry
         );
       }
+    } else if (currentLab === 'chemistry') {
+      if (currentExperiment === 'molecules') {
+        simulationRef.current = new MolecularViewer(
+          containerRef.current,
+          chemistryParams.molecules
+        );
+      }
     }
 
     return () => {
@@ -76,9 +84,13 @@ export default function VisualizationArea() {
         } else if (currentExperiment === 'geometry') {
           simulationRef.current.updateParameters(mathParams.geometry);
         }
+      } else if (currentLab === 'chemistry') {
+        if (currentExperiment === 'molecules') {
+          simulationRef.current.updateParameters(chemistryParams.molecules);
+        }
       }
     }
-  }, [physicsParams, mathParams, currentExperiment]);
+  }, [physicsParams, mathParams, chemistryParams, currentExperiment]);
 
   // Control simulation play/pause (for physics only)
   useEffect(() => {

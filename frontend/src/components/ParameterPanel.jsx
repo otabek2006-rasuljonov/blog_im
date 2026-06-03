@@ -11,6 +11,7 @@ const EXPERIMENTS = {
 
 const FUNCTION_TYPES = ['sine', 'cosine', 'tangent', 'quadratic', 'cubic', 'exponential', 'logarithm'];
 const GEOMETRY_SHAPES = ['cube', 'sphere', 'cylinder', 'cone', 'torus', 'tetrahedron', 'octahedron', 'dodecahedron', 'icosahedron'];
+const MOLECULES = ['water', 'methane', 'carbonDioxide', 'ammonia'];
 
 export default function ParameterPanel() {
   const { t } = useTranslation();
@@ -22,6 +23,8 @@ export default function ParameterPanel() {
     updatePhysicsParam,
     mathParams,
     updateMathParam,
+    chemistryParams,
+    updateChemistryParam,
     setIsRunning 
   } = useLabStore();
 
@@ -256,6 +259,39 @@ export default function ParameterPanel() {
     }
   };
 
+  const renderChemistryControls = () => {
+    switch (currentExperiment) {
+      case 'molecules':
+        const molParams = chemistryParams.molecules;
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">Молекуллар</h3>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Молекула Тури</label>
+              <select
+                value={molParams.type}
+                onChange={(e) => updateChemistryParam('molecules', 'type', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {MOLECULES.map(mol => (
+                  <option key={mol} value={mol}>{mol}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="bg-blue-50 p-3 rounded-lg">
+              <p className="text-sm text-gray-600">Ротация</p>
+              <p className="text-xs text-gray-500">Сичкамни сусувчи билан суғириш</p>
+            </div>
+          </div>
+        );
+      
+      default:
+        return <div className="text-gray-600">{t('controls.presets')}</div>;
+    }
+  };
+
   return (
     <div className="p-4">
       <h2 className="text-lg font-bold text-gray-800 mb-4">
@@ -287,7 +323,8 @@ export default function ParameterPanel() {
       {/* Controls */}
       {currentLab === 'physics' && renderPhysicsControls()}
       {currentLab === 'mathematics' && renderMathematicsControls()}
-      {(currentLab === 'chemistry' || currentLab === 'biology') && (
+      {currentLab === 'chemistry' && renderChemistryControls()}
+      {currentLab === 'biology' && (
         <div className="text-gray-500 text-center py-8">
           Тез ороқа аст
         </div>

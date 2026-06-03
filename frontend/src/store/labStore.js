@@ -51,6 +51,22 @@ export const useLabStore = create((set) => ({
     }
   },
 
+  // Chemistry lab parameters
+  chemistryParams: {
+    molecules: {
+      type: 'water'
+    },
+    reactions: {
+      temperature: 298.15,
+      pressure: 1.0,
+      concentration: 1.0
+    },
+    matter: {
+      type: 'solid',
+      temperature: 273.15
+    }
+  },
+
   updatePhysicsParam: (experiment, paramName, value) => 
     set((state) => ({
       physicsParams: {
@@ -68,6 +84,17 @@ export const useLabStore = create((set) => ({
         ...state.mathParams,
         [experiment]: {
           ...state.mathParams[experiment],
+          [paramName]: value
+        }
+      }
+    })),
+
+  updateChemistryParam: (experiment, paramName, value) =>
+    set((state) => ({
+      chemistryParams: {
+        ...state.chemistryParams,
+        [experiment]: {
+          ...state.chemistryParams[experiment],
           [paramName]: value
         }
       }
