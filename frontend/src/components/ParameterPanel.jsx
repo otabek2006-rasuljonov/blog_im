@@ -25,6 +25,8 @@ export default function ParameterPanel() {
     updateMathParam,
     chemistryParams,
     updateChemistryParam,
+    biologyParams,
+    updateBiologyParam,
     setIsRunning 
   } = useLabStore();
 
@@ -292,6 +294,47 @@ export default function ParameterPanel() {
     }
   };
 
+  const renderBiologyControls = () => {
+    switch (currentExperiment) {
+      case 'cell':
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">Қўлай модели</h3>
+            
+            <div className="space-y-3">
+              <div className="bg-green-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-700 font-medium">Ядро</p>
+                <p className="text-xs text-gray-500">Клетка центри - генетик материал</p>
+              </div>
+              
+              <div className="bg-orange-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-700 font-medium">Митохондрия</p>
+                <p className="text-xs text-gray-500">Энергия ишлаб чиқариш органеллали</p>
+              </div>
+              
+              <div className="bg-yellow-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-700 font-medium">Голджи Апарати</p>
+                <p className="text-xs text-gray-500">Транспорт ва қадоқлаш</p>
+              </div>
+              
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-700 font-medium">Вакуол</p>
+                <p className="text-xs text-gray-500">Сув ва модда сақлашмон</p>
+              </div>
+
+              <div className="bg-green-100 p-3 rounded-lg">
+                <p className="text-sm text-gray-600">Сичкамни сусувчи билан</p>
+                <p className="text-xs text-gray-500">роторий сув ва зум билан</p>
+              </div>
+            </div>
+          </div>
+        );
+      
+      default:
+        return <div className="text-gray-600">{t('controls.presets')}</div>;
+    }
+  };
+
   return (
     <div className="p-4">
       <h2 className="text-lg font-bold text-gray-800 mb-4">
@@ -324,11 +367,7 @@ export default function ParameterPanel() {
       {currentLab === 'physics' && renderPhysicsControls()}
       {currentLab === 'mathematics' && renderMathematicsControls()}
       {currentLab === 'chemistry' && renderChemistryControls()}
-      {currentLab === 'biology' && (
-        <div className="text-gray-500 text-center py-8">
-          Тез ороқа аст
-        </div>
-      )}
+      {currentLab === 'biology' && renderBiologyControls()}
     </div>
   );
 }

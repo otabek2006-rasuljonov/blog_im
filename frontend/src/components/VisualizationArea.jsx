@@ -6,12 +6,13 @@ import ProjectileSimulation from '../simulations/physics/ProjectileSimulation';
 import FunctionGraphing from '../simulations/mathematics/FunctionGraphing';
 import GeometryShapes from '../simulations/mathematics/GeometryShapes';
 import MolecularViewer from '../simulations/chemistry/MolecularViewer';
+import CellModel from '../simulations/biology/CellModel';
 
 export default function VisualizationArea() {
   const containerRef = useRef(null);
   const simulationRef = useRef(null);
   
-  const { currentLab, currentExperiment, physicsParams, mathParams, chemistryParams, isRunning } = useLabStore();
+  const { currentLab, currentExperiment, physicsParams, mathParams, chemistryParams, biologyParams, isRunning } = useLabStore();
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -58,6 +59,13 @@ export default function VisualizationArea() {
           chemistryParams.molecules
         );
       }
+    } else if (currentLab === 'biology') {
+      if (currentExperiment === 'cell') {
+        simulationRef.current = new CellModel(
+          containerRef.current,
+          biologyParams.cell
+        );
+      }
     }
 
     return () => {
@@ -88,9 +96,13 @@ export default function VisualizationArea() {
         if (currentExperiment === 'molecules') {
           simulationRef.current.updateParameters(chemistryParams.molecules);
         }
+      } else if (currentLab === 'biology') {
+        if (currentExperiment === 'cell') {
+          simulationRef.current.updateParameters(biologyParams.cell);
+        }
       }
     }
-  }, [physicsParams, mathParams, chemistryParams, currentExperiment]);
+  }, [physicsParams, mathParams, chemistryParams, biologyParams, currentExperiment]);
 
   // Control simulation play/pause (for physics only)
   useEffect(() => {

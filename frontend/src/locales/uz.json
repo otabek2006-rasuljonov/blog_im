@@ -70,6 +70,35 @@
       "surfaceArea": "Сиртқи Майдон"
     }
   },
+  "chemistry": {
+    "molecules": {
+      "title": "Молекуллар",
+      "description": "Молекуллярни 3D намойиш",
+      "type": "Молекула Тури"
+    },
+    "reactions": {
+      "title": "Реакция",
+      "description": "Химик реакцияларни кузатиш",
+      "temperature": "Ҳарорат (К)"
+    }
+  },
+  "biology": {
+    "cell": {
+      "title": "Қўлай Модели",
+      "description": "Ҳайвон қўлайни ўйрениш",
+      "type": "Қўлай Тури"
+    },
+    "photosynthesis": {
+      "title": "Фотосинтез",
+      "description": "Ўсимликдаги иш-фаол жараён",
+      "lightIntensity": "Ёқдириш интенсивлиги"
+    },
+    "dna": {
+      "title": "ДНК",
+      "description": "ДНК репликацияси",
+      "sequence": "ДНК Мавзули"
+    }
+  },
   "controls": {
     "reset": "Аввалги ҳолатига қайтариш",
     "play": "Бошлаш",

@@ -67,6 +67,21 @@ export const useLabStore = create((set) => ({
     }
   },
 
+  // Biology lab parameters
+  biologyParams: {
+    cell: {
+      type: 'animal'
+    },
+    photosynthesis: {
+      lightIntensity: 1.0,
+      co2Level: 1.0,
+      temperature: 298.15
+    },
+    dna: {
+      sequence: 'ATGC'
+    }
+  },
+
   updatePhysicsParam: (experiment, paramName, value) => 
     set((state) => ({
       physicsParams: {
@@ -95,6 +110,17 @@ export const useLabStore = create((set) => ({
         ...state.chemistryParams,
         [experiment]: {
           ...state.chemistryParams[experiment],
+          [paramName]: value
+        }
+      }
+    })),
+
+  updateBiologyParam: (experiment, paramName, value) =>
+    set((state) => ({
+      biologyParams: {
+        ...state.biologyParams,
+        [experiment]: {
+          ...state.biologyParams[experiment],
           [paramName]: value
         }
       }
