@@ -34,6 +34,23 @@ export const useLabStore = create((set) => ({
       height: 0
     }
   },
+
+  // Mathematics lab parameters
+  mathParams: {
+    functions: {
+      type: 'sine',
+      amplitude: 1,
+      frequency: 1,
+      phase: 0
+    },
+    geometry: {
+      type: 'cube',
+      size: 20,
+      volume: 0,
+      surfaceArea: 0
+    }
+  },
+
   updatePhysicsParam: (experiment, paramName, value) => 
     set((state) => ({
       physicsParams: {
@@ -44,6 +61,18 @@ export const useLabStore = create((set) => ({
         }
       }
     })),
+
+  updateMathParam: (experiment, paramName, value) =>
+    set((state) => ({
+      mathParams: {
+        ...state.mathParams,
+        [experiment]: {
+          ...state.mathParams[experiment],
+          [paramName]: value
+        }
+      }
+    })),
+
   resetPhysicsParams: (experiment) =>
     set((state) => ({
       physicsParams: {

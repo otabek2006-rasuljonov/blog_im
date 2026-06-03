@@ -4,10 +4,13 @@ import SliderControl from './controls/SliderControl';
 
 const EXPERIMENTS = {
   physics: ['gravity', 'pendulum', 'projectile'],
-  mathematics: ['functions', 'surfaces', 'geometry'],
+  mathematics: ['functions', 'geometry'],
   chemistry: ['molecules', 'reactions', 'matter'],
   biology: ['cell', 'photosynthesis', 'dna']
 };
+
+const FUNCTION_TYPES = ['sine', 'cosine', 'tangent', 'quadratic', 'cubic', 'exponential', 'logarithm'];
+const GEOMETRY_SHAPES = ['cube', 'sphere', 'cylinder', 'cone', 'torus', 'tetrahedron', 'octahedron', 'dodecahedron', 'icosahedron'];
 
 export default function ParameterPanel() {
   const { t } = useTranslation();
@@ -16,7 +19,9 @@ export default function ParameterPanel() {
     currentExperiment, 
     setCurrentExperiment,
     physicsParams, 
-    updatePhysicsParam, 
+    updatePhysicsParam,
+    mathParams,
+    updateMathParam,
     setIsRunning 
   } = useLabStore();
 
@@ -153,6 +158,104 @@ export default function ParameterPanel() {
     }
   };
 
+  const renderMathematicsControls = () => {
+    switch (currentExperiment) {
+      case 'functions':
+        const funcParams = mathParams.functions;
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">{t('mathematics.functions.title')}</h3>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">{t('mathematics.functions.type')}</label>
+              <select
+                value={funcParams.type}
+                onChange={(e) => updateMathParam('functions', 'type', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {FUNCTION_TYPES.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+            
+            <SliderControl
+              label={t('mathematics.functions.amplitude')}
+              value={funcParams.amplitude}
+              min={0.1}
+              max={5}
+              step={0.1}
+              onChange={(value) => updateMathParam('functions', 'amplitude', value)}
+              unit=""
+            />
+            
+            <SliderControl
+              label={t('mathematics.functions.frequency')}
+              value={funcParams.frequency}
+              min={0.1}
+              max={5}
+              step={0.1}
+              onChange={(value) => updateMathParam('functions', 'frequency', value)}
+              unit=""
+            />
+
+            <SliderControl
+              label={t('mathematics.functions.phase')}
+              value={funcParams.phase}
+              min={0}
+              max={Math.PI * 2}
+              step={0.1}
+              onChange={(value) => updateMathParam('functions', 'phase', value)}
+              unit="rad"
+            />
+          </div>
+        );
+
+      case 'geometry':
+        const geoParams = mathParams.geometry;
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">{t('mathematics.geometry.title')}</h3>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">{t('mathematics.geometry.type')}</label>
+              <select
+                value={geoParams.type}
+                onChange={(e) => updateMathParam('geometry', 'type', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {GEOMETRY_SHAPES.map(shape => (
+                  <option key={shape} value={shape}>{shape}</option>
+                ))}
+              </select>
+            </div>
+            
+            <SliderControl
+              label={t('mathematics.geometry.size')}
+              value={geoParams.size}
+              min={5}
+              max={50}
+              step={1}
+              onChange={(value) => updateMathParam('geometry', 'size', value)}
+              unit="unit"
+            />
+
+            {geoParams.volume > 0 && (
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-600">{t('mathematics.geometry.volume')}</p>
+                <p className="text-lg font-semibold text-blue-600">
+                  {geoParams.volume.toFixed(2)} unit³
+                </p>
+              </div>
+            )}
+          </div>
+        );
+      
+      default:
+        return <div className="text-gray-600">{t('controls.presets')}</div>;
+    }
+  };
+
   return (
     <div className="p-4">
       <h2 className="text-lg font-bold text-gray-800 mb-4">
@@ -172,7 +275,10 @@ export default function ParameterPanel() {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {t(`physics.${exp}.title`)}
+              {currentLab === 'physics' && t(`physics.${exp}.title`)}
+              {currentLab === 'mathematics' && t(`mathematics.${exp}.title`)}
+              {currentLab === 'chemistry' && `${exp}`}
+              {currentLab === 'biology' && `${exp}`}
             </button>
           ))}
         </div>
@@ -180,7 +286,8 @@ export default function ParameterPanel() {
 
       {/* Controls */}
       {currentLab === 'physics' && renderPhysicsControls()}
-      {currentLab !== 'physics' && (
+      {currentLab === 'mathematics' && renderMathematicsControls()}
+      {(currentLab === 'chemistry' || currentLab === 'biology') && (
         <div className="text-gray-500 text-center py-8">
           Тез ороқа аст
         </div>

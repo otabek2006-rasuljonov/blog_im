@@ -3,12 +3,14 @@ import { useLabStore } from '../store/labStore';
 import GravitySimulation from '../simulations/physics/GravitySimulation';
 import PendulumSimulation from '../simulations/physics/PendulumSimulation';
 import ProjectileSimulation from '../simulations/physics/ProjectileSimulation';
+import FunctionGraphing from '../simulations/mathematics/FunctionGraphing';
+import GeometryShapes from '../simulations/mathematics/GeometryShapes';
 
 export default function VisualizationArea() {
   const containerRef = useRef(null);
   const simulationRef = useRef(null);
   
-  const { currentLab, currentExperiment, physicsParams, isRunning } = useLabStore();
+  const { currentLab, currentExperiment, physicsParams, mathParams, isRunning } = useLabStore();
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -36,6 +38,18 @@ export default function VisualizationArea() {
           physicsParams.projectile
         );
       }
+    } else if (currentLab === 'mathematics') {
+      if (currentExperiment === 'functions') {
+        simulationRef.current = new FunctionGraphing(
+          containerRef.current,
+          mathParams.functions
+        );
+      } else if (currentExperiment === 'geometry') {
+        simulationRef.current = new GeometryShapes(
+          containerRef.current,
+          mathParams.geometry
+        );
+      }
     }
 
     return () => {
@@ -48,26 +62,34 @@ export default function VisualizationArea() {
   // Update simulation when parameters change
   useEffect(() => {
     if (simulationRef.current?.updateParameters) {
-      if (currentExperiment === 'gravity') {
-        simulationRef.current.updateParameters(physicsParams.gravity);
-      } else if (currentExperiment === 'pendulum') {
-        simulationRef.current.updateParameters(physicsParams.pendulum);
-      } else if (currentExperiment === 'projectile') {
-        simulationRef.current.updateParameters(physicsParams.projectile);
+      if (currentLab === 'physics') {
+        if (currentExperiment === 'gravity') {
+          simulationRef.current.updateParameters(physicsParams.gravity);
+        } else if (currentExperiment === 'pendulum') {
+          simulationRef.current.updateParameters(physicsParams.pendulum);
+        } else if (currentExperiment === 'projectile') {
+          simulationRef.current.updateParameters(physicsParams.projectile);
+        }
+      } else if (currentLab === 'mathematics') {
+        if (currentExperiment === 'functions') {
+          simulationRef.current.updateParameters(mathParams.functions);
+        } else if (currentExperiment === 'geometry') {
+          simulationRef.current.updateParameters(mathParams.geometry);
+        }
       }
     }
-  }, [physicsParams, currentExperiment]);
+  }, [physicsParams, mathParams, currentExperiment]);
 
-  // Control simulation play/pause
+  // Control simulation play/pause (for physics only)
   useEffect(() => {
-    if (simulationRef.current) {
+    if (currentLab === 'physics' && simulationRef.current) {
       if (isRunning) {
         simulationRef.current.start?.();
       } else {
         simulationRef.current.stop?.();
       }
     }
-  }, [isRunning]);
+  }, [isRunning, currentLab]);
 
   return (
     <div
