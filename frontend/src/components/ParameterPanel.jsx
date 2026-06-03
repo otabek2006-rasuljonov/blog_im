@@ -2,9 +2,25 @@ import { useTranslation } from 'react-i18next';
 import { useLabStore } from '../store/labStore';
 import SliderControl from './controls/SliderControl';
 
+const EXPERIMENTS = {
+  physics: ['gravity', 'pendulum', 'projectile'],
+  mathematics: ['functions', 'surfaces', 'geometry'],
+  chemistry: ['molecules', 'reactions', 'matter'],
+  biology: ['cell', 'photosynthesis', 'dna']
+};
+
 export default function ParameterPanel() {
   const { t } = useTranslation();
-  const { currentLab, currentExperiment, physicsParams, updatePhysicsParam, setIsRunning } = useLabStore();
+  const { 
+    currentLab, 
+    currentExperiment, 
+    setCurrentExperiment,
+    physicsParams, 
+    updatePhysicsParam, 
+    setIsRunning 
+  } = useLabStore();
+
+  const experiments = EXPERIMENTS[currentLab] || [];
 
   const renderPhysicsControls = () => {
     const params = physicsParams[currentExperiment];
@@ -87,6 +103,50 @@ export default function ParameterPanel() {
             </button>
           </div>
         );
+
+      case 'projectile':
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">{t('physics.projectile.title')}</h3>
+            
+            <SliderControl
+              label={t('physics.projectile.velocity')}
+              value={params.velocity}
+              min={5}
+              max={100}
+              step={1}
+              onChange={(value) => updatePhysicsParam('projectile', 'velocity', value)}
+              unit={t('units.metersPerSecond')}
+            />
+            
+            <SliderControl
+              label={t('physics.projectile.angle')}
+              value={params.angle}
+              min={0}
+              max={90}
+              step={1}
+              onChange={(value) => updatePhysicsParam('projectile', 'angle', value)}
+              unit={t('units.degrees')}
+            />
+
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={params.airResistance}
+                onChange={(e) => updatePhysicsParam('projectile', 'airResistance', e.target.checked)}
+                className="w-4 h-4 accent-blue-600"
+              />
+              <span className="text-sm font-medium text-gray-700">{t('physics.projectile.airResistance')}</span>
+            </label>
+
+            <button
+              onClick={() => setIsRunning(true)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+            >
+              {t('controls.play')}
+            </button>
+          </div>
+        );
       
       default:
         return <div className="text-gray-600">{t('controls.presets')}</div>;
@@ -95,10 +155,30 @@ export default function ParameterPanel() {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold text-gray-800 mb-6">
+      <h2 className="text-lg font-bold text-gray-800 mb-4">
         {t('controls.presets')}
       </h2>
-      
+
+      {/* Experiment Selection Tabs */}
+      {experiments.length > 0 && (
+        <div className="mb-6 space-y-2">
+          {experiments.map((exp) => (
+            <button
+              key={exp}
+              onClick={() => setCurrentExperiment(exp)}
+              className={`w-full px-3 py-2 rounded-lg font-medium text-sm transition-all ${
+                currentExperiment === exp
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {t(`physics.${exp}.title`)}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Controls */}
       {currentLab === 'physics' && renderPhysicsControls()}
       {currentLab !== 'physics' && (
         <div className="text-gray-500 text-center py-8">

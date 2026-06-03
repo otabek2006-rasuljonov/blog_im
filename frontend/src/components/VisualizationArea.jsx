@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLabStore } from '../store/labStore';
 import GravitySimulation from '../simulations/physics/GravitySimulation';
 import PendulumSimulation from '../simulations/physics/PendulumSimulation';
+import ProjectileSimulation from '../simulations/physics/ProjectileSimulation';
 
 export default function VisualizationArea() {
   const containerRef = useRef(null);
@@ -29,6 +30,11 @@ export default function VisualizationArea() {
           containerRef.current,
           physicsParams.pendulum
         );
+      } else if (currentExperiment === 'projectile') {
+        simulationRef.current = new ProjectileSimulation(
+          containerRef.current,
+          physicsParams.projectile
+        );
       }
     }
 
@@ -46,6 +52,8 @@ export default function VisualizationArea() {
         simulationRef.current.updateParameters(physicsParams.gravity);
       } else if (currentExperiment === 'pendulum') {
         simulationRef.current.updateParameters(physicsParams.pendulum);
+      } else if (currentExperiment === 'projectile') {
+        simulationRef.current.updateParameters(physicsParams.projectile);
       }
     }
   }, [physicsParams, currentExperiment]);
